@@ -1,0 +1,149 @@
+<H1>TRANSACTIONS</H1>
+<H4>note:coresponds to "TRANSACTIONS" table and M:M associative tables</H4>
+<ul>
+	<li><a href="index">Home</a></li>
+	<li><a href="client">Account</a></li>
+        <li><a href="billing">Billing</a></li>
+	<li><a href="transactions">Transactions</a></li>
+	<li><a href="priceplan">Price Plan</a></li>
+	<li><a href="location">Location</a></li>
+</ul>	
+	
+
+<form action="dtchng" method="POST">
+
+       <select name="billsDt"> 
+          {{#each billdt}}
+             <option value="{{billDate}}">{{billDate}}</option>
+          {{/each}}
+        </select><br>
+
+
+<input type="submit" value="View bill for selected date">
+
+
+</form>
+<br> <br>
+
+<form id="transtbl" action="/transactions" method="post">
+
+<h4> Note: blank row and insert button only show for "admin" </h4>
+<table>
+	<tr>
+
+                <th>Customer ID</th>
+                <th>Bill Number</th>
+                <th>Transaction ID</th>
+		<th>Billing Frequency</th>
+		<th>Transaction Type</th>
+		<th>Location Type</th>
+		<th>Transaction Count</th>
+		<th>Total</th>
+                <th>Delete(Admin only)</th>
+	</tr>
+
+        {{#each trans}}
+         <tr>
+                 <td>{{customerID}}</td>
+                 <td>{{billNum}}</td>
+                 <td>{{transNum}}</td>
+                 <td>{{billFreq}}</td>
+                 <td>{{transType}}</td>
+                 <td>{{locType}}</td>
+                 <td>{{tranCount}}</td>
+                 <td>{{Total}}</td>
+		<td>
+		<a href="/delete/{{transNum}}">Delete</a>
+		</td>        
+ 
+         </tr>
+         {{/each}}
+
+
+ 	<tr>
+            
+            <td><input type="integer" name="cid" value={{custid}}> </td>
+            <td>  <select name="bnum">
+               
+                 {{#each billnbr}}
+                   <option value="{{billNum}}">{{billNum}}</option>
+                 {{/each}}
+
+               </select>		
+              </td> 
+            <td> </td>
+
+            <td>
+              <select name="bfid" id="bfreq">
+               
+                 {{#each billf}}
+                   <option value="{{billFreq}}">{{billFreq}}</option>
+                 {{/each}}
+
+               </select>		
+             </td>
+            <td>
+              <select name="btid" id="btype">
+          
+                 {{#each billt}}
+                   <option value="{{transType}}">{{transType}}</option>
+                 {{/each}}
+
+              </select>		
+             </td>
+            <td>
+              <select name="loctfq" id="loctype">
+              
+                 {{#each locf}}
+                   <option value="{{locType}}">{{locType}}</option>
+                 {{/each}}
+
+              </select>		
+             </td>
+	<td><input type="integer" name="trnsnum"> </td>
+		<td></td>
+                <td><input type="submit" name="tsub" value="Insert Row"></td> 
+	</tr>
+
+
+
+
+</table>
+</form>
+
+<style>
+table, td, tr, th {
+	border: solid;
+}
+form {
+	border: solid;
+	width: 75%
+}
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  width: auto;
+  background-color: #f1f1f1;
+  overflow: hidden;
+}
+
+li {
+   float: left;
+}
+
+li a {
+  display: block;
+  color: #000;
+  padding: 8px 16px;
+  text-decoration: none;
+}
+
+/* Change the link color on hover */
+li a:hover {
+  background-color: #555;
+  color: white;
+}
+</style>
+
+

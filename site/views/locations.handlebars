@@ -1,0 +1,87 @@
+<H1>LOCATION</H1>
+<H4>note:coresponds to "location Types" table and M:M associative tables</H4>
+
+<ul>
+	<li><a href="index">Home</a></li>
+	<li><a href="client">Account</a></li>
+        <li><a href="billing">Billing</a></li>
+	<li><a href="transactions">Transactions</a></li>
+	<li><a href="priceplan">Price Plan</a></li>
+	<li><a href="location">Location</a></li>
+</ul>	
+
+<table>
+	<tr>
+		<th>Location Key</th>
+		<th>Current Plan ID</th>
+		<th>Location Type</th>
+		<th>Current Location Price</th>
+		<th>Insert (Admin Only)</th>
+	</tr>
+	{{#each locations}}
+	<tr>
+		<td>{{locKey}}</td>
+		<td>{{planID}}</td>
+		<td>{{locType}}</td>
+		<td>{{locationPrice}}</td>
+	</tr>
+	{{/each}}
+	<form id="location" action="/location" method="post">
+	 <tr>
+                <td><input readonly type="text" name="locKey" value="Autoincremented"> </td>
+                <td><input type="text" name="planID"> </td>
+                <td><select name="locType">
+			<option value="Website">Website</option>
+			<option value="Mall">Mall</option>
+			<option value="Stor">Sore</option>
+		</select>
+		 </td>
+                <td><input type="number" name="locationPrice"></td>
+                <td><input type="submit" value="Insert(Admin Only)"></td>
+        </tr>
+	</form>
+
+
+</table>
+
+
+<style>
+table, td, tr, th {
+	border: solid;
+	
+}
+
+form {
+	border: solid;
+	width: 15%
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  width: auto;
+  background-color: #f1f1f1;
+  overflow: hidden;
+}
+
+li {
+   float: left;
+}
+
+li a {
+  display: block;
+  color: #000;
+  padding: 8px 16px;
+  text-decoration: none;
+}
+
+/* Change the link color on hover */
+li a:hover {
+  background-color: #555;
+  color: white;
+}
+</style>
+
+
+	

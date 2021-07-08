@@ -1,0 +1,72 @@
+<H1>BILLING</H1>
+<H4>note:coresponds to "Customer Billings" table
+<ul>
+	<li><a href="index">Home</a></li>
+	<li><a href="client">Account</a></li>
+        <li><a href="billing">Billing</a></li>
+	<li><a href="transactions">Transactions</a></li>
+	<li><a href="priceplan">Price Plan</a></li>
+	<li><a href="location">Location</a></li>
+</ul>	
+	
+
+
+<h4> Note: blank row and insert button only show for "admin" </h4>
+<table>
+	<tr>
+		<th>Bill Number</th>
+		<th>Bill Date</th>
+		<th>Total</th>
+	</tr>
+	{{#each bill}}
+	<tr>
+	<td>{{billNum}}</td>
+	<td>{{billDate}}</td>
+	<td>{{Total}}</td>
+	</tr>
+	{{/each}}
+</table>
+
+
+<form id="addbill" action="/billing" method="post">
+	Customer ID: <input  type="number" name="customerID"><br>
+	Bill Date: <input type="date" name="billDate"<br>
+	<input type="submit" value="Insert">
+</form>
+
+<style>
+table, td, tr, th {
+	border: solid;
+}
+form {
+	border: solid;
+	width: 35%
+}
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  width: auto;
+  background-color: #f1f1f1;
+  overflow: hidden;
+}
+
+li {
+   float: left;
+}
+
+li a {
+  display: block;
+  color: #000;
+  padding: 8px 16px;
+  text-decoration: none;
+}
+
+/* Change the link color on hover */
+li a:hover {
+  background-color: #555;
+  color: white;
+}
+</style>
+
+

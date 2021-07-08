@@ -1,0 +1,99 @@
+<H1>PRICE PLAN</H1>
+ <H4>note:coresponds to "Price Plans" table</H4>
+
+<ul>
+	<li><a href="index">Home</a></li>
+	<li><a href="client">Account</a></li>
+        <li><a href="billing">Billing</a></li>
+	<li><a href="transactions">Transactions</a></li>
+	<li><a href="priceplan">Price Plan</a></li>
+	<li><a href="location">Location</a></li>
+</ul>	
+	
+
+<table>
+	<tr>
+		<th>Plan ID</th>
+		<th>Billing Frequency</th>
+		<th>Transaction Type</th>
+		<th>Transaction Surcharge</th>
+		<th>Insert(Admin Only)</th>
+	</tr>
+	{{#each priceplan}}
+	<tr>
+		<td>{{planID}}</td>
+		<td>{{billFreq}}</td>
+		<td>{{transType}}</td>
+		<td>{{transTypedSurcharge}}</td>
+	</tr>
+	{{/each}}
+
+
+	</tr>
+	<form id="priceplan" action="/priceplan" method="post">
+	<tr>
+		<td><input readonly id="planID" value="Auto Incremented"> </td>
+		<td><select name="billFreq">
+			<option value="W">Weekly</option>
+			<option value="M">Monthly</option>
+			<option value="B">Bi-Monthly</option>
+			<option value="Y">Annually</option>
+		</select></td>
+		<td><select name="transType">
+			<option value="Check">Check</option>
+			<option value="Credit">Credit Card</option>
+			<option value="Debit">Debit Card</option>
+			<option value="EFT">EFT</option>
+		</select></td>
+		<td><input type="float" name="transTypedSurcharge"> </td>
+		<td><input type="submit" value="Insert(Admin Only)"></td>
+	</tr>
+	</form>
+
+</table>
+
+
+<script>
+Handlebars.registerHelper('char2string', function() {
+	console.log(obj);
+	console.log(billFreq);
+});
+</script>
+
+
+<style>
+table, td, tr, th {
+	border: solid;
+}
+form {
+	border: solid;
+	width: 15%
+}
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  width: auto;
+  background-color: #f1f1f1;
+  overflow: hidden;
+}
+
+li {
+   float: left;
+}
+
+li a {
+  display: block;
+  color: #000;
+  padding: 8px 16px;
+  text-decoration: none;
+}
+
+/* Change the link color on hover */
+li a:hover {
+  background-color: #555;
+  color: white;
+}
+</style>
+
+

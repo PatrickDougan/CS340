@@ -1,0 +1,59 @@
+<H1>ACCOUNT</H1>
+<h4>note: corresponds to "Customers" table</h4>
+<ul>
+	<li><a href="index">Home</a></li>
+	<li><a href="client">Account</a></li>
+        <li><a href="billing">Billing</a></li>
+	<li><a href="transactions">Transactions</a></li>
+	<li><a href="priceplan">Price Plan</a></li>
+	<li><a href="location">Location</a></li>
+</ul>	
+
+<h1>CLIENT UPDATE</h1>
+<form id="client-update" action="/client_update" method="post">
+	{{#each customer}}
+	Email: <input type="text" name="email" value="{{email}}"><br>
+	Phone Number: <input type="text" name="phone" value="{{phone}}"><br>
+	Address: <input type="text" name="address" value="{{address}}"><br>
+	<input readonly type="hidden" name="customerID" value="{{customerID}}">
+	<input type="submit" value="update"> 
+	{{/each}}
+</form>
+
+
+<style>
+table, td, tr, th {
+	border: solid;
+}
+form {
+	border: solid;
+	width: 75%
+}
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  width: auto;
+  background-color: #f1f1f1;
+  overflow: hidden;
+}
+
+li {
+   float: left;
+}
+
+li a {
+  display: block;
+  color: #000;
+  padding: 8px 16px;
+  text-decoration: none;
+}
+
+/* Change the link color on hover */
+li a:hover {
+  background-color: #555;
+  color: white;
+}
+</style>
+
+

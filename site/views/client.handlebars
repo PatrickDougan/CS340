@@ -1,0 +1,117 @@
+<H1>ACCOUNT</H1>
+<h4>note: corresponds to "Customers" table</h4>
+<ul>
+	<li><a href="index">Home</a></li>
+	<li><a href="client">Account</a></li>
+        <li><a href="billing">Billing</a></li>
+	<li><a href="transactions">Transactions</a></li>
+	<li><a href="priceplan">Price Plan</a></li>
+	<li><a href="location">Location</a></li>
+</ul>	
+
+
+
+<form action="auth" method="POST">
+<h4>Note: admin may want to change to differnt users to edit data. So need to know if logged out</h4>
+<!-- <input type="button" id="alogout" value="Logout" onclick="logout()">	-->
+        
+<!--           <input type="submit"  name=login value="Logout"> -->
+ 
+           <h3>Log in</h3>
+           <h4>(note: "admin" allows additional manipulation of tables</h4>
+           <h4>(note: "admin" not implemented for demo - use client login </h4>
+           <h4>(clients should change all info such as inserts as noted)</h4>
+
+	   Please enter your client ID:
+               <select name="ID">
+                   {{#each cidlst}}
+                     <option value="{{customerID}}">{{customerID}}</option>
+                   {{/each}}
+               </select>
+
+
+<!-- <input type="number" name="ID"> -->
+
+<br>	
+           <label for="clientID">Please Enter Your password (note all blank for class project):</label><br>
+           <input type="text" id="pass" name="pwd"><br><br>    
+		
+           
+           <td><input type="submit"  name=loginout value="Login"></td>
+</form>
+<h4>(note: shows and populates on login)</h4>
+           <table>
+	    <tr>
+		<th>Client ID</th>
+		<th>Email</th>
+		<th>Phone#</th>
+		<th>Address</th>
+		<th>Edit</th>
+	   </tr>
+		{{#each customer}}
+		<tr>	
+		<td>{{customerID}}</td>	
+		<td>{{email}}</td>
+		<td>{{phone}}</td>
+		<td>{{address}}</td>
+		<td><a href="/client_update/{{customerID}}">Update</a></td>
+		</tr>
+		{{/each}}
+         </table>
+
+
+
+
+           <h3>Sign up (note: this is an insert function)</h3>
+
+	<form id="Customer" action="/client" method="post">
+		Email: <input type="text" name="email"><br>
+		Phone Number: <input type="text" name="phone"><br>
+		Address: <input type="text" name="address"><br>
+		<input type="submit" value="Create new Account">
+	</form>
+<h3>Congrats!  Here is your client information </h3>
+<h4> Note only displays if signing up </h4>
+<table>
+	<tr>
+		<th>Client ID</th>
+		<td>1</td>
+	</tr>
+</table>
+
+<style>
+table, td, tr, th {
+	border: solid;
+}
+form {
+	border: solid;
+	width: 75%
+}
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  width: auto;
+  background-color: #f1f1f1;
+  overflow: hidden;
+}
+
+li {
+   float: left;
+}
+
+li a {
+  display: block;
+  color: #000;
+  padding: 8px 16px;
+  text-decoration: none;
+}
+
+/* Change the link color on hover */
+li a:hover {
+  background-color: #555;
+  color: white;
+}
+</style>
+
+
