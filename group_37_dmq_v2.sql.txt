@@ -1,0 +1,173 @@
+---------------------------------------------------------------------------------------------------
+-- Queries for client.html
+---------------------------------------------------------------------------------------------------
+
+-- Query to get customer ids
+SELECT DISTINCT `customerID` from Customers
+
+-- Get user id and all user info for form display based on input field for e-mail
+SELECT `customerID`, `email`,`phone`, `address` FROM `Customers` WHERE `email` = :clientID;
+
+-- Query to update customer information if customer uses edit button
+UPDATE `Customers` 
+SET 
+    `email` = :cemail,
+    `phone` = :cphone,
+    `address`  = :caddr
+.WHERE 
+ `email` = :clientID;
+
+-- Insert new customer into database
+INSERT INTO `Customers` (`email`,`phone`, `address`) 
+VALUES (:clientEmail, :clientPhone, :clientAddress),
+
+--  Get new customer customer ID
+SELECT customerID FROM `Customers` WHERE `email` = :clientEmail;
+
+
+---------------------------------------------------------------------------------------------------
+-- Queries for billing.html
+---------------------------------------------------------------------------------------------------
+Select cb.billNum, cb.billDate, bl.Total from `Customer Billings` cb
+
+left join 
+
+(SELECT billNum, sum( (tranCount * transTypedSurcharge) + (tranCount * locationPrice ))  as Total 
+
+ FROM (SELECT TR.*, LP.billNum, LP.locType, LP.locationPrice, TS.transType, TS.transTypedSurcharge, TS.`billFreq` from Transactions as TR
+      INNER JOIN 
+        (SELECT billNum, lkKey,  locType,  locationPrice FROM `Location Types` lt 
+           INNER JOIN 
+           (SELECT * FROM `Location Bill` ) lb
+              ON lt.locKey = lb.locKey) as LP 
+      ON TR.lkKey = LP.lkKey
+  
+   INNER JOIN 
+   
+        (SELECT billNum, pbKey, transType, transTypedSurcharge, billFreq FROM `Price Plans` pp 
+          INNER JOIN  
+          (SELECT * from `Plan Bill` ) pb
+      ON pp.planID = pb.planID) as TS
+   
+   ON TR.pbKey = TS.pbKey and LP.billNum = TS.billNum) as FQ
+   
+   group by billNum) bl
+   
+   on cb.billNum = bl.billNum
+   
+   where cb.customerID = :customerID
+
+
+
+-- Query to insert row
+INSERT INTO `Customer Billings` (`customerID`, `billDate`) 
+VALUES (:customerID, :billdt)
+
+
+
+
+---------------------------------------------------------------------------------------------------
+-- Queries for transactions.html
+---------------------------------------------------------------------------------------------------
+
+-- select bill dates for drop down based on customerID from login 
+SELECT billDate FROM `Customer Billings` WHERE customerID = :customerID;
+
+
+-- Query to get data for table based on customerID.  Need to sum over transactions
+-- by transTypeSurcharge and locationPrice 
+
+SELECT `billFreq`, `transType`,  `locType`, `tranCount`, (tranCount * transTypedSurcharge) + (tranCount * locationPrice )  as Total 
+
+ FROM (SELECT TR.*, LP.locType, LP.locationPrice, TS.transType, TS.transTypedSurcharge, TS.`billFreq` from Transactions as TR
+      INNER JOIN 
+        (SELECT lkKey,  locType,  locationPrice FROM `Location Types` lt 
+           INNER JOIN 
+           (SELECT * FROM `Location Bill` WHERE `billNum` in ( SELECT DISTINCT billNum FROM `Customer Billings` WHERE customerID = :customerID and billDate = :billDate ) ) lb
+              ON lt.locKey = lb.locKey) as LP 
+      ON TR.lkKey = LP.lkKey
+  
+   INNER JOIN 
+   
+        (SELECT pbKey, transType, transTypedSurcharge, billFreq FROM `Price Plans` pp 
+          INNER JOIN  
+          (SELECT * from `Plan Bill` WHERE `billNum` in (  SELECT DISTINCT billNum FROM `Customer Billings` WHERE customerID = :customerID  and billDate = :billDate) ) pb
+      ON pp.planID = pb.planID) as TS
+   
+   ON TR.pbKey = TS.pbKey) as FQ
+
+-- admin i.e. admin (logged in, not customer) view Query as above, but for all customers since admin 
+-- Query to get data for table based on customerID.  Need to sum over transactions
+-- by transTypeSurcharge and locationPrice 
+
+SELECT customerID, billNum, TransNum, `billFreq`, `transType`,  `locType`, `tranCount`, (tranCount * transTypedSurcharge) + (tranCount * locationPrice )  as Total 
+
+ FROM (SELECT TR.*, customerID, LP.billNum, LP.locType, LP.locationPrice, TS.transType, TS.transTypedSurcharge, TS.`billFreq` from Transactions as TR
+      INNER JOIN 
+        (SELECT billNum, lkKey,  locType,  locationPrice FROM `Location Types` lt 
+           INNER JOIN 
+           (SELECT * FROM `Location Bill` WHERE `billNum` in ( SELECT DISTINCT billNum FROM `Customer Billings`  ) ) lb
+              ON lt.locKey = lb.locKey) as LP 
+      ON TR.lkKey = LP.lkKey
+  
+   INNER JOIN 
+   
+        (SELECT pbKey, transType, transTypedSurcharge, billFreq FROM `Price Plans` pp 
+          INNER JOIN  
+          (SELECT * from `Plan Bill` WHERE `billNum` in (  SELECT DISTINCT billNum FROM `Customer Billings`) ) pb
+      ON pp.planID = pb.planID) as TS  
+   ON TR.pbKey = TS.pbKey
+
+   LEFT JOIN (SELECT DISTINCT customerID, billNum FROM `Customer Billings`) CB
+   ON LP.billNum = CB.billNum
+   
+   ) as FQ
+
+
+-- Query to get list for input row Billing Frequency 
+Select distinct billFreq from `Price Plans`;
+
+-- Query to get list for input row  Transaction Type based on selected Billing Frequency
+Select distinct tranType from `Price Plans` where billFreq = :bfreq;
+
+-- Query to get distinct location Type
+Select distinct locType from `Location Types`;
+
+
+--Query to insert into Transactions table 
+INSERT INTO `Transactions`(`pbKey`, `lkKey`, `tranCount`) 
+                  SELECT a.pbKey, b.lkKey, ? as tranCount from
+                  (SELECT DISTINCT 1 as merge, pbKey from `Plan Bill` where planID = 
+                  (SELECT planID from `Price Plans` where billFreq = ? and transType = ? and billNum = ? )) a 
+                  LEFT JOIN
+                  (SELECT DISTINCT 1 as merge, lkKey from `Location Bill` where locKey = 
+                  (SELECT locKey from `Location Types` where locType = ? and billNum = ? )) b 
+                  on a.merge = b.merge;
+
+
+-- Query to delete row from table 
+DELETE FROM Transactions transNum = :tnum;
+
+
+---------------------------------------------------------------------------------------------------
+-- Queries for priceplan.html
+---------------------------------------------------------------------------------------------------
+
+--Query to get data from Price Plans
+Select * from `Price Plans`;
+
+--Query to insert into Price Plans
+INSERT INTO `Price Plans`(`billFreq`, `transType`,`transTypedSurcharge`) VALUES
+(:billFreq, :tranType
+, :locPrice)
+---------------------------------------------------------------------------------------------------
+-- Queries for location.html
+---------------------------------------------------------------------------------------------------
+
+--Query to get data for Locations
+Select * from `Location Types`;
+
+--Query to insert into `Location Types`
+
+INSERT INTO `Location Types`(`planID`, `locType`,`locationPrice`) VALUES
+(:locPlan, :locType, :locPrice)
